@@ -1,18 +1,9 @@
 const express = require("express");
 const apiRouter = express.Router();
-const sqlite3 = require("sqlite3");
-const db = new sqlite3.Database(process.env.TEST_DATABASE || "./database.sqlite");
+const employeesRouter = require("./employees");
+const menusRouter = require("./menus");
 
-apiRouter.get("/", (req, res, next) => {
-  db.all("SELECT * FROM Employee WHERE is_current_employee = 1",
-    (error, rows) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).json({employees: rows});
-      }
-    }
-  );
-});
+apiRouter.use("/employees", employeesRouter);
+apiRouter.use("/menus", menusRouter);
 
 module.exports = apiRouter;
