@@ -96,8 +96,26 @@ menusRouter.put("/:menuId", validateFields, (req, res, next) => {
   );
 });
 
-// menusRouter.delete("/:menuId", (req, res, next) => {
-  
-// });
+menusRouter.delete("/:menuId", (req, res, next) => {
+  db.get(`SELECT * FROM MenuItem WHERE menu_id = ${req.params.menuId}`,
+    (error, row) => {
+      if (row) {
+        res.sendStatus(400);
+      } else if (error) {
+        next(error);
+      } else {
+        db.run(`DELETE FROM Menu WHERE id = ${req.params.menuId}`,
+          (error) => {
+            if (error) {
+              next(error);
+            } else {
+              res.sendStatus(204);
+            }
+          }
+        );
+      }
+    }
+  );
+});
 
 module.exports = menusRouter;
